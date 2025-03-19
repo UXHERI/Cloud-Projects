@@ -184,7 +184,75 @@ Click on the double arrow icon at the bottom left corner of VS Code window. This
 </html>
 ```
 
+
+
+
+
 ## 2. Connect a GitHub Repo with AWS
+Now in this phase, I'll do the following steps:
+1. Set up Git and GitHub.
+2. Connect my web app project to a GitHub repo.
+3. Make changes to my web app code - and watch my GitHub repo update too.
+
+## 
+For this, I have to install Git on my EC2 instance first:
+```bash
+sudo dnf update -y
+sudo dnf install git -y
+```
+
+To verify the installation, I run this command:
+```bash
+git --version
+```
+
+Now I have to create a Github Repo.
+
+![App Screenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/Git%20Repo.png)
+## 
+Now to setup a local git repo in my web app folder I'll run this command:
+```bash
+git init
+```
+
+Run this command to link your github repo to your local git. Don't forget to replace [YOUR GITHUB REPO LINK] with the link of your github repo.
+```bash
+git remote add origin [YOUR GITHUB REPO LINK]
+```
+
+Next, I'll save my changes and push them into GitHub.
+```bash
+git add . 
+git commit -m "Updated index.jsp with new content"
+git push -u origin master
+```
+
+- Now in the mean time, set up a Github Token doing the following steps:
+1. Click Settings.
 
 
+![App Screenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/Github%20Token.png)
 
+2. Click on Developer Settings.
+
+![App Screenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/Github%20Token%202.png)
+
+3. Select Generate new token (classic).
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-github/5.9.png)
+
+4. Configure it as:
+
+![App Screenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/IMG12.png)
+
+## 
+
+- For USERNAME paste your Github USERNAME
+- For Password paste the Github Token
+
+![App Screenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/IMG1122.png)
+
+
+- The change push is now successfull.
+
+![App SCreenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/IMG1322.png)
