@@ -175,7 +175,7 @@ Click on the double arrow icon at the bottom left corner of VS Code window. This
 
 <body>
 
-<h2>Hello {YOUR NAME}!</h2>
+<h2>Hello World!</h2>
 
 <p>This is my NextWork web application working!</p>
 
