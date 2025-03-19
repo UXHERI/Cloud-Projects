@@ -125,3 +125,21 @@ For this I first install this extension in VSCode:
 
 
 ![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-vscode/7.2.png)
+
+Click on the double arrow icon at the bottom left corner of VS Code window. This button is a shortcut to use Remote - SSH.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-vscode/7.3.png)
+
+- Select Connect to Host...
+
+
+
+- Select + Add New SSH Host...
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-vscode/7.4.png)
+
+- Select the configuration file at the top of my window. It should look similar to /Users/username/.ssh/config
+![App Screenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/7.5.png)
+
+![App Screenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/7.6.png)
+
