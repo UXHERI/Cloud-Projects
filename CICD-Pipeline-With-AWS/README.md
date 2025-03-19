@@ -139,7 +139,52 @@ Click on the double arrow icon at the bottom left corner of VS Code window. This
 ![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-vscode/7.4.png)
 
 - Select the configuration file at the top of my window. It should look similar to /Users/username/.ssh/config
+
 ![App Screenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/7.5.png)
 
 ![App Screenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/7.6.png)
+
+- Now I am ready to connect VSCode with my EC2 instance!
+- Click on the double arrow button on the bottom left corner and select Connect to Host again.
+- Now it's showing my EC2 instance.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-vscode/7.7.png)
+
+- Check the bottom right hand corner of my new VSCode window - it's showing my EC2 instance's IPV4 DNS.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-vscode/7.9.png)
+
+- From VSCode's left hand navigation bar, select the Explorer icon.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-vscode/7.10.png)
+
+- Select Open folder.
+- At the top of the VSCode window, there is a drop down of different file and folder names.
+- Enter /home/ec2-user/nextwork-web-project.
+- Press OK.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-vscode/7.11.png)
+
+- Now it is showing my Web App on my EC2 instance:
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-vscode/7.15.png)
+
+## Updating my Web App
+
+```bash
+<html>
+
+<body>
+
+<h2>Hello {YOUR NAME}!</h2>
+
+<p>This is my NextWork web application working!</p>
+
+</body>
+
+</html>
+```
+
+## 2. Connect a GitHub Repo with AWS
+
+
 
