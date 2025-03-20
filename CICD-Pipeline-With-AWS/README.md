@@ -534,3 +534,647 @@ mvn -s settings.xml compile
 
 - These are the dependencies that Maven downloaded from Maven Central via CodeArtifact when you compiled your project.
 - Congrats! This confirms that your CodeArtifact setup is working correctly and that Maven is using it to manage dependencies 💪
+## 4. Continuous Integration with CodeBuild
+
+Now in this phase, I am going to create a CodeBuild project to automatically build the code that is in our Github repo.
+
+## What is AWS CodeBuild?
+
+AWS CodeBuild is a fully build tool for your code. It takes your source code, compiles it, runs tests, and packages it up. Engineers love continuous integration tools like CodeBuild because you don't have to manually set up and manage any build servers yourself, and you only pay for the compute time you use for building your projects (instead of entire servers that are idle most of the time). Think of it as a super-efficient, scalable, and managed service that handles all the heavy lifting of building and testing your applications.
+
+Continuous Integration is like having a quality control checkpoint that automatically kicks in whenever anyone on your team makes changes to your code. Instead of waiting until the end of a project to discover that something broke, CI helps you catch and fix issues early and often. CI helps you constantly check that everything still works as expected - running tests, compiling code, and making sure new changes play nicely with the existing codebase.
+## 
+- In the CodeBuild dashboard, find the left navigation menu.
+- Select Build projects.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-2.png)
+
+Configure Your Build Project
+- On the Create build project page, scroll to the Project configuration section.
+- Under Project name, enter nextwork-devops-cicd.
+- Under Project type, make sure Default project is selected.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-4.png)
+
+- Scroll down to the Source section.
+- Under Source provider, select GitHub.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-6.png)
+
+- In the Source section, under Credential, you might see the message "You have not connected to GitHub. Manage account credentials."
+- Click on Manage account credentials.
+
+![App SCreenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-7.png)
+
+- You will be taken to the Manage default source credential page.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-8.png)
+
+- Ensure GitHub App is selected for Credential type.
+- Select create a new GitHub connection.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-10.png)
+
+- On the Create connection page, under Connection details, enter "nextwork-devops-cicd" as the Connection name.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-12.png)
+
+- Click Connect to GitHub.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-13.png)
+
+- You will be taken to GitHub to authorize the AWS Connector for GitHub application.
+- Select your GitHub user account where your repository is located.
+- Select Select.
+- After authorization on GitHub, you'll get taken back to the AWS console.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-15.png)
+
+- Under GitHub Apps, you'll see that your GitHub username is an option now!.
+- Select your GitHub username.
+- Click Connect.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-18.png)
+
+- You should get redirected back to CodeBuild's Manage default source credential page after successful connection.
+- On the Manage default source credential page, you should see your newly created connection listed.
+- Click Save at the bottom of the page.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-21.png)
+
+- Now, back in the Create build project page, in the Source section, you should see a success message in green: "Your account is successfully connected by using an AWS managed GitHub App."
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-22.png)
+
+- You can now select your GitHub repository nextwork-devops-webapp as the source.
+- Scroll down to the Primary source webhook events section.
+- Untick the Webhook checkbox that says "Rebuild every time a code change is pushed to this repository." Scroll down to the Environment section.
+- Under Compute, for Provisioning model, choose On-demand.
+- For Environment image, choose Managed image.
+- For Compute type, choose EC2.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/lambda-corretto8.png)
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-23.png)
+
+- Under Environment, for Operating system, select Amazon Linux.
+- For Runtime(s), select Standard.
+- For Image, choose "aws/codebuild/amazonlinux-x86_64-standard:corretto8"
+
+![App Sreenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-24.png)
+
+- Keep Image version as Always use the latest image for this runtime version.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-26.png)
+
+- Under Service role, select New service role.
+
+Now, let's define how CodeBuild will actually build your application using a buildspec.yml file.
+
+- Scroll down to the Buildspec section.
+- Under Buildspec format, select Use a buildspec file.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-28.png)
+
+- Leave Buildspec name as default buildspec.yml.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-43.png)
+
+- Scroll down to the Batch configuration section.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-29.png)
+##
+
+- Scroll down to the Artifacts section. We need to configure where CodeBuild will store the build artifacts.
+
+## What are build artifacts?
+
+Build artifacts are the tangible outputs of your build process. They're what you'll actually deploy to your servers or distribute to users. That's why storing them properly in S3 is so important - they're the whole reason we're running the build in the first place.
+
+For our project, we want our build process to create one build artifact that packages up everything a server could need to host our web app in one neat bundle. This bundle is called a WAR file (which stands for Web Application Archive, or Web Application Resource) and it works just like a zip file - a server will simply "unzip" your WAR file to find a bunch of files and resources (which are also build artifacts, i.e. a WAR file is a build artifact that bundles up other build artifacts) and host your web app straight away. Notice how you haven't been able to view your web app on a web browser so far in this project series - that's because we haven't created and deployed the WAR file yet!
+
+Note: our build process will create a .war file (a packaged Java web application) as the build artifact, but artifacts could be executables, libraries, documentation, or any output your build creates.
+##
+
+- For Type, select Amazon S3.
+
+## Why store artifacts in Amazon S3?
+
+Your compiled applications, libraries, or any output files from your build need a safe, accessible home after the build finishes. S3 is perfect for this - it's a highly reliable and scalable storage solution that's also in our AWS environment (which makes the artifact easily accessible for deployment later).
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-30.png)
+
+- Let's head to the S3 console. In the AWS Management Console search bar, type S3 and select S3 from the dropdown menu under Services.
+- Make sure you're still in the same region where you set up the CodeBuild build project.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-31.png)
+
+- On the Buckets page, click Create bucket.
+- In the Create bucket page, under General configuration, for Bucket name, enter "nextwork-devops-cicd-yourname"
+- Leave all other settings as default.
+- Click Create bucket at the bottom of the page.
+
+![App Screenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/IMG19.png)
+
+- In your CodeBuild project, head back to the Artifacts section.
+- For Type, select Amazon S3.
+- For Bucket name, choose your newly created bucket "nextwork-devops-cicd-yourname" from the dropdown.
+- In Name, enter "nextwork-devops-cicd-artifact". This names our artifact, so it's easy to spot it in the S3 bucket.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-45.png)
+
+- For Artifacts packaging, select Zip.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-47.png)
+
+- Scroll down to the Logs section.
+- Make sure CloudWatch logs is checked.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-48.png)
+
+- In Group name, enter "/aws/codebuild/nextwork-devops-cicd"
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-49.png)
+
+- Scroll to the bottom of the page and click Create build project.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-50.png)
+
+- Create a buildspec.yml file in your web app.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-66.png)
+
+- Paste the following code for buildspec.yml:
+```bash
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto8
+  pre_build:
+    commands:
+      - echo Initializing environment
+      - export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain nextwork --domain-owner 123456789012 --region us-east-2 --query authorizationToken --output text`
+
+  build:
+    commands:
+      - echo Build started on `date`
+      - mvn -s settings.xml compile
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - mvn -s settings.xml package
+artifacts:
+  files:
+    - target/nextwork-web-project.war
+  discard-paths: no
+```
+
+## What's inside buildspec.yml?
+
+This buildspec.yml file is like a recipe for how to build your Java web app. Let's break it down into simpler terms:
+
+version: 0.2: This just tells AWS which version of the buildspec format we're using.
+
+phases: Think of these as the different stages your build goes through: install is the "prep work" phase - here, we're telling CodeBuild to use Java 8. pre_build are tasks to do before the main building starts. Here, we're grabbing a security token so we can access our dependencies. build is where the actual building happens. We're using Maven (a popular Java build tool) to compile our code. post_build are the finishing touches after the main build is done. Here, we're packaging everything into a WAR file (a format for web applications).
+
+artifacts tells CodeBuild which files to save as the output of the build. In our case, we want that WAR file we created during the post_build phase.
+##
+In the buildspec.yml file:
+- Replace the placeholder AWS Account ID 123456789012 with your actual AWS Account ID.
+- Check that the region code is correct! Update the region section from --region us-east-2 to the AWS region you're using.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-68.png)
+
+- Now, we need to commit and push the buildspec.yml file to your GitHub repository so CodeBuild can access it.
+```bash
+git add .
+git commit -m "Adding buildspec.yml file"
+git push
+```
+
+Now we need to grant CodeBuild's IAM role the permission to access CodeArtifact.
+- Head to the IAM console.
+- In the IAM console, select Roles in the left navigation menu.
+- In the roles search bar, type codebuild to filter the roles.
+- Select the role that starts with "codebuild-nextwork-devops-cicd-service-role". This is the new service role that CodeBuild created when we set up our build project.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-86.png)
+
+- Select your CodeBuild service role.
+- Click on the Add permissions button.
+- Choose Attach policies.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-88.png)
+
+- In the Filter policies search bar, type "codeartifact-nextwork-consumer-policy"
+- Check the checkbox next to the policy named "codeartifact-nextwork-consumer-policy"
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-89.png)
+
+- After selecting the policy, click the Add permissions button.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-92.png)
+##
+- Navigate to your newly created CodeBuild project nextwork-devops-cicd.
+- Click the Start build button.
+
+![App Screenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/IMG20.png)
+
+- You should see the build status change to In progress.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-55.png)
+
+- The build status should now be Succeeded with a green checkmark, indicating a successful CI pipeline run!
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codebuild-updated/screenshot-97.png)
+##
+
+- Now head to the S3 console.
+- Select the bucket you created earlier.
+- You should now see the artifact nextwork-devops-cicd-artifact.zip listed in your bucket.
+
+![App Screenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/IMG23.png)
+
+
+## Launch EC2 with CloudFormation
+
+Let's start our deployment by setting up the deployment infrastructure. We'll use CloudFormation to launch an EC2 instance and its networking resources.
+
+- Select Create stack.
+- Select With new resources (standard) from the dropdown menu.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-2.png)
+
+- Select Template is ready.
+- Select Upload a template file.
+- Select Choose file.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-5.png)
+
+- Upload the following CloudFormation template: nextworkwebapp.yaml
+
+![App Screenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/YAML%20File.png)
+
+- Verify the file nextworkwebapp.yaml is uploaded and select Next.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-6.png)
+
+- Select Next
+- Enter NextWorkCodeDeployEC2Stack as the Stack name.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-7.png)
+
+- Next, we'll need to add our IP address to the template.
+- Head to https://checkip.amazonaws.com/ and copy your IP address.
+- Paste your IP address into the MyIP parameter field and add /32 at the end.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-9.png)
+
+- Select Next.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-10.png)
+
+Configure Stack Options
+- In Configure stack options, under Stack failure options, select Roll back all stack resources.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-11.png)
+
+- Next, select Delete all newly created resources.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-12.png)
+
+- Scroll down to Capabilities and check the box I acknowledge that AWS CloudFormation might create IAM resources.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-13.png)
+
+- Select Next.
+
+![App SCreenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-14.png)
+
+- Review and Submit
+- Select Submit.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-19.png)
+
+- CloudFormation is now launching the stack in the background! This process will create the EC2 instance and networking resources in the background.
+- Let's check out the Resources tab.
+- You can see a list of the resources being created!
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-21.png)
+
+- Wait for the stack's status to become CREATE_COMPLETE.
+
+
+
+
+## 5. Deploy a Web App with CodeDeploy
+
+To start deploying our application, we need to prepare a set of scripts and configuration files for CodeDeploy. It's like we need to write a set of instructions for CodeDeploy to follow - otherwise, it wouldn't know how to deploy our application!
+
+- In your IDE, create a new folder at the root of your project directory.
+- Name the folder "scripts"
+- Inside the scripts folder, create a new file named "install_dependencies.sh"
+- Add the following content to install_dependencies.sh:
+```bash
+#!/bin/bash
+sudo yum install tomcat -y
+sudo yum -y install httpd
+sudo cat << EOF > /etc/httpd/conf.d/tomcat_manager.conf
+<VirtualHost *:80>
+  ServerAdmin root@localhost
+  ServerName app.nextwork.com
+  DefaultType text/html
+  ProxyRequests off
+  ProxyPreserveHost On
+  ProxyPass / http://localhost:8080/nextwork-web-project/
+  ProxyPassReverse / http://localhost:8080/nextwork-web-project/
+</VirtualHost>
+EOF
+```
+
+- Now create another file called "start_server.sh"
+- Add the following content to start_server.sh:
+```bash
+#!/bin/bash
+sudo systemctl start tomcat.service
+sudo systemctl enable tomcat.service
+sudo systemctl start httpd.service
+sudo systemctl enable httpd.service
+```
+
+- Now create a new file named "stop_server.sh"
+- Add the following content to stop_server.sh:
+```bash
+#!/bin/bash
+isExistApp="$(pgrep httpd)"
+if [[ -n $isExistApp ]]; then
+sudo systemctl stop httpd.service
+fi
+isExistApp="$(pgrep tomcat)"
+if [[ -n $isExistApp ]]; then
+sudo systemctl stop tomcat.service
+fi
+```
+
+- Check that you have install_dependencies.sh, start_server.sh, and stop_server.sh inside the scripts folder.
+##
+
+- Create a new file, but this time at the root of your project.
+- Make sure this file is NOT inside the scripts folder!
+- Name the file "appspec.yml"
+- Add the following content to appspec.yml:
+```bash
+version: 0.0
+os: linux
+files:
+  - source: /target/nextwork-web-project.war
+    destination: /usr/share/tomcat/webapps/
+hooks:
+  BeforeInstall:
+    - location: scripts/install_dependencies.sh
+      timeout: 300
+      runas: root
+  ApplicationStart:
+    - location: scripts/start_server.sh
+      timeout: 300
+      runas: root
+  ApplicationStop:
+    - location: scripts/stop_server.sh
+      timeout: 300
+      runas: root
+```
+
+Update buildspec.yml File
+- Open buildspec.yml and modify the artifacts section to include appspec.yml and the scripts folder:
+```bash
+artifacts:
+  files:
+    - target/nextwork-web-project.war
+    - appspec.yml
+    - scripts/**/*
+  discard-paths: no
+```
+
+- Now from the terminal push these changes.
+```bash
+git add .
+git commit -m "Adding CodeDeploy files"
+git push
+```
+
+## Set Up CodeDeploy
+
+- Head to the CodeDeploy console.
+- Select Applications in the left hand navigation menu.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-47.png)
+
+- Select Create application.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-48.png)
+
+## What is a CodeDeploy application?
+
+A CodeDeploy application is like the main folder for your deployment project. It doesn't do much on its own, but it helps you organize everything related to deploying one application.
+
+
+In more technical, AWS terms, a CodeDeploy application is a namespace or container that groups deployment configurations, deployment groups, and revisions for a specific application. Having separate CodeDeploy applications helps you manage multiple applications without mixing up their deployment resources.
+
+- Enter "nextwork-devops-cicd" as the Application name.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-49.png)
+
+- Choose EC2/On-premises as the Compute platform.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-50.png)
+
+- That's it! Select Create application.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-51.png)
+
+- Wait for the success message that the application nextwork-devops-cicd is created.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-52.png)
+
+- Select Create deployment group.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-53.png)
+
+- Enter "nextwork-devops-cicd-deploymentgroup" as the Deployment group name.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-54.png)
+##
+
+Now we have to pause here and go to IAM console to create a service role.
+- Head to the IAM console.
+- In the IAM console, select Roles from the left hand navigation bar.
+- Select Create role.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-58.png)
+
+- Choose AWS service as the trusted entity type.
+- Choose CodeDeploy as the service and select CodeDeploy as the use case.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-60.png)
+
+- Select Next.
+- You'll notice the AWSCodeDeployRole default policy is suggested already - nice! That's all we need.
+ ![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-62.png)
+
+- Select Next.
+- Enter "NextWorkCodeDeployRole" as the Role name.
+- Add a description to help you remember why you created this role.
+```bash
+Allows CodeDeploy to call AWS services such as Auto Scaling on your behalf. Created as a part of NextWork's Cl/CD Pipeline series.
+```
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-64.png)
+
+- Review the Permissions policies and make sure AWSCodeDeployRole is attached.
+
+![App SCreenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-65.png)
+
+- Select Create role.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-66.png)
+##
+
+## Select This Service Role in CodeDeploy
+
+- Head back to the CodeDeploy deployment group configuration tab.
+- Select the newly created NextWorkCodeDeployRole as the Service role.
+- Choose In-place as the Deployment type.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-69.png)
+
+
+- Under Environment configuration, select Amazon EC2 instances.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-71.png)
+
+- In Tag group 1, enter role as the Key.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-72.png)
+
+- Enter webserver as the Value.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-73.png)
+
+- Check the line below your tag settings - you might notice that 1 unique matched instance is found.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-74.png)
+
+- Click Click here for details to view the matched instance.
+- You'll see an EC2 instance called NextWorkCodeDeployEC2Stack::WebServer - that's the EC2 instance we launched from our CloudFormation template. This confirms to us that the web app will be deployed onto that instance instance.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-76.png)
+
+Configure Agent and Deployment Settings
+- Now let's head back to your CodeDeploy Deployment group set up.
+- Under Agent configuration with AWS Systems Manager, select Now and schedule updates and Basic scheduler with 14 Days.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-77.png)
+
+- In Deployment settings, keep the default CodeDeployDefault.AllAtOnce
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-78.png)
+
+- Deselect Enable load balancing.
+- Select Create deployment group
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-80.png)
+
+- In the deployment group details page, select Create deployment.
+- Under Revision type, make sure My application is stored in Amazon S3 is selected. That's because our deployment artifact is inside an S3 bucket!
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-82.png)
+
+- Head back to your S3 bucket called nextwork-devops-cicd.
+- Click into the nextwork-devops-cicd-artifact build artifact.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-83.png)
+
+- Copy the file's S3 URI.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-85.png)
+
+- Paste the S3 URI into the Revision location field in CodeDeploy.
+- Select .zip as the Revision file type.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-88.png)
+
+- Next, we'll leave Additional deployment behavior settings as default.
+- Select Create deployment.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-90.png)
+
+- CodeDeploy kicks off a deployment of your web app.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-91.png)
+
+- Scroll down to Deployment lifecycle events and monitor the events by clicking View events.
+- See the lifecycle events progressing, such as BeforeInstall, ApplicationStart, etc. These are the events you defined in appspec.yml!
+
+![App SCreenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-92.png)
+
+- Now head back to your CodeBuild build project, and rebuild your project.
+- Once your second build is a success, return to CodeDeploy and retry the deployment.
+- Wait until the deployment status says Success.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-92.png)
+
+- Select the Instance ID in the Deployment lifecycle events panel. This takes you to the deployment EC2 instance you launched with CloudFormation.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-93.png)
+
+- Get the Public IPv4 DNS of your EC2 instance from the EC2 console.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-94.png)
+
+- Open the Public IPv4 DNS in a web browser.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-96.png)
+
+You've successfully automated a web app's deployment to EC2 using AWS CodeDeploy!
+## 6. Build a CI/CD Pipeline with AWS CodePipeline
+
+Now I am going to set up a CI/CD pipeline with AWS CodePipeline for Continous Integration and Continuous Deployment automatically.
+
+## What is AWS CodePipeline? Why are we using it?
+
+With CodePipeline, you can create a workflow that automatically moves your code changes through the build and deployment stage. In our case, you'll see how a new push to your GitHub repository automtically triggers a build in CodeBuild (continuous integration), and a then a deployment in CodeDeploy (continuous deployment)!
+
+Using CodePipeline makes sure your deployments are consistent, reliable and happen automatically whenever you update your code - with less risk of human errors! It saves you time too.
+##
+- Head to the CodePipeline console.
+- In the CodePipeline dashboard, Select Create pipeline.
+- Select Build custom pipeline.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-2.png)
+
+- Click Next.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-3.png)
+
+- Name your pipeline "nextwork-devops-cicd"
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-4.png)
+
+- Under Execution mode, select Superseded.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-6.png)
+
+- Under Service role, select New service role. Keep the default role name.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-7.png)
+
+- Expand Advanced settings.
+- Leave the default settings for Artifact store, Encryption key, and Variables.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-9.png)
+
+- Click Next.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-10.png)
