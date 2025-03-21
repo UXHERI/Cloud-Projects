@@ -28,13 +28,13 @@ In this AWS project, I will build a CI/CD pipeline using AWS and Github.
 
 ## 1. Setup a Web App in the Cloud
 
-First, I launch an EC2 instance which I will be using to build my Web App on it and all of my files for my Web App will be on this EC2 instance.
+- First, I launch an EC2 instance which I will be using to build my Web App on it and all of my files for my Web App will be on this EC2 instance.
 
 
 
 ![App Screenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/EC2-1.png)
 
-Then I SSH into my EC2 instance from VSCode Terminal. For this I changed the permissions of "PEM Key" using the following commands:
+- Then I SSH into my EC2 instance from VSCode Terminal. For this I changed the permissions of "PEM Key" using the following commands:
 
 
 
@@ -46,12 +46,12 @@ icacls "nextwork-keypair.pem" /inheritance:r
 
 ```
 
-Now to SSH into your EC2, use this command:
+- Now to SSH into your EC2, use this command:
 ```bash
 ssh -i [PATH TO YOUR .PEM FILE] ec2-user@[YOUR PUBLIC IPV4 DNS]
 ```
 
-Now I am going to install Apache Maven and Amazon Corretto 8.
+- Now I am going to install Apache Maven and Amazon Corretto 8.
 
 
 ## What is Apache Maven?
@@ -74,7 +74,7 @@ echo "export PATH=/opt/apache-maven-3.5.2/bin:$PATH" >> ~/.bashrc
 source ~/.bashrc
 
 ```
-Now I am going to install Java 8, or more specifically, Amazon Correto 8.
+- Now I am going to install Java 8, or more specifically, Amazon Correto 8.
 
 ## What is Java? What is Amazon Corretto 8?
 
@@ -93,18 +93,18 @@ export JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto.x86_64
 export PATH=/usr/lib/jvm/java-1.8.0-amazon-corretto.x86_64/jre/bin/:$PATH
 ```
 
-To verify that Maven is installed correctly, I run the following command next:
+- To verify that Maven is installed correctly, I run the following command next:
 ```bash
 mvn -v
 ```
 
-To verify that I have installed Java 8 correctly, I run this command next:
+- To verify that I have installed Java 8 correctly, I run this command next:
 ```bash
 java -version
 ```
 
 ## Create the applications
-To create the Web application, I run these Maven commands in the terminal to generate a Java web app.
+- To create the Web application, I run these Maven commands in the terminal to generate a Java web app.
 ```bash
 mvn archetype:generate \
 -DgroupId=com.nextwork.app \
@@ -114,19 +114,19 @@ mvn archetype:generate \
 ```
 
 ## Connect VS Code with the EC2 Instance
-In this step I am going to do the following tasks:
+- In this step I am going to do the following tasks:
 
 1. Install an extension in VS Code.
 2. Use the extension to set up a connection between VS Code and the EC2 instance.
 3. Explore and edit my Java web app's files using VS Code.
 
 ## 
-For this I first install this extension in VSCode:
+- For this I first install this extension in VSCode:
 
 
 ![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-vscode/7.2.png)
 
-Click on the double arrow icon at the bottom left corner of VS Code window. This button is a shortcut to use Remote - SSH.
+- Click on the double arrow icon at the bottom left corner of VS Code window. This button is a shortcut to use Remote - SSH.
 
 ![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-vscode/7.3.png)
 
@@ -166,6 +166,7 @@ Click on the double arrow icon at the bottom left corner of VS Code window. This
 ![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-vscode/7.11.png)
 
 - Now it is showing my Web App on my EC2 instance:
+
 ![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-vscode/7.15.png)
 
 ## Updating my Web App
@@ -189,38 +190,38 @@ Click on the double arrow icon at the bottom left corner of VS Code window. This
 
 
 ## 2. Connect a GitHub Repo with AWS
-Now in this phase, I'll do the following steps:
+- Now in this phase, I'll do the following steps:
 1. Set up Git and GitHub.
 2. Connect my web app project to a GitHub repo.
 3. Make changes to my web app code - and watch my GitHub repo update too.
 
 ## 
-For this, I have to install Git on my EC2 instance first:
+- For this, I have to install Git on my EC2 instance first:
 ```bash
 sudo dnf update -y
 sudo dnf install git -y
 ```
 
-To verify the installation, I run this command:
+- To verify the installation, I run this command:
 ```bash
 git --version
 ```
 
-Now I have to create a Github Repo.
+- Now I have to create a Github Repo.
 
 ![App Screenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/Git%20Repo.png)
 ## 
-Now to setup a local git repo in my web app folder I'll run this command:
+- Now to setup a local git repo in my web app folder I'll run this command:
 ```bash
 git init
 ```
 
-Run this command to link your github repo to your local git. Don't forget to replace [YOUR GITHUB REPO LINK] with the link of your github repo.
+- Then I run this command to link my github repo to my local git. Don't forget to replace [YOUR GITHUB REPO LINK] with the link of your github repo.
 ```bash
 git remote add origin [YOUR GITHUB REPO LINK]
 ```
 
-Next, I'll save my changes and push them into GitHub.
+- Next, I'll save my changes and push them into GitHub.
 ```bash
 git add . 
 git commit -m "Updated index.jsp with new content"
@@ -228,20 +229,20 @@ git push -u origin master
 ```
 
 - Now in the mean time, set up a Github Token doing the following steps:
-1. Click Settings.
+- Click Settings.
 
 
 ![App Screenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/Github%20Token.png)
 
-2. Click on Developer Settings.
+- Click on Developer Settings.
 
 ![App Screenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/Github%20Token%202.png)
 
-3. Select Generate new token (classic).
+- Select Generate new token (classic).
 
 ![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-github/5.9.png)
 
-4. Configure it as:
+- Configure it as:
 
 ![App Screenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/IMG12.png)
 
@@ -342,6 +343,7 @@ Otherwise, Maven can try all it wants to command your EC2 instance to store and 
 - In the AWS Management Console, head to the the IAM console.
 - In the IAM console, in the left-hand menu, click on Policies.
 - Click the Create policy button to start creating a new IAM policy.
+
 ![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codeartifact-updated/screenshot-212.png)
 
 - On the Create policy page, select the JSON tab.
@@ -374,16 +376,20 @@ Otherwise, Maven can try all it wants to command your EC2 instance to store and 
 ```
 
 - After pasting the JSON policy document, click the Next button at the bottom right.
+
 ![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codeartifact-updated/screenshot-214.png)
 
 - On the Review policy page, in the Policy name field, enter codeartifact-nextwork-consumer-policy.
 - In the Description - optional field, add a description like: Provides permissions to read from CodeArtifact. Created as a part of NextWork CICD Pipeline series.
+
 ![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codeartifact-updated/screenshot-216.png)
 
 - Review the Summary of your policy to ensure the permissions and details are correct.
+
 ![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codeartifact-updated/screenshot-218.png)
 
 - Click the Create policy button to create the IAM policy.
+
 ![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codeartifact-updated/screenshot-219.png)
 
 ## Attach IAM Policy and Verify CodeArtifact Connection
@@ -1021,6 +1027,7 @@ Now we have to pause here and go to IAM console to create a service role.
 
 - Select Next.
 - You'll notice the AWSCodeDeployRole default policy is suggested already - nice! That's all we need.
+
  ![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codedeploy-updated/screenshot-62.png)
 
 - Select Next.
