@@ -1296,4 +1296,3 @@ git push origin master
 - The CI/CD pipeline is now automatically building and deploying my web application whenever I push changes to GitHub.
 
 So that was a detailed project on how to build CI/CD Pipeline on AWS using Github as the source.
-](https://learn.nextwork.org/projects/static/aws-devops-vscode/architecture-complete.png)](https://learn.nextwork.org/projects/static/aws-devops-vscode/architecture-complete.png)
