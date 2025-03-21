@@ -5,7 +5,7 @@ In this AWS project, I will build a CI/CD pipeline using AWS and Github.
 
 
 
-![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-cicd/aws-cicd.png)
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-vscode/architecture-complete.png)
 
 
 
