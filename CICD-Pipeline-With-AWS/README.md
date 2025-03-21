@@ -1178,3 +1178,114 @@ Using CodePipeline makes sure your deployments are consistent, reliable and happ
 - Click Next.
 
 ![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-10.png)
+
+- In the Source provider dropdown, select GitHub (via GitHub App).
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-11.png)
+
+- Under Connection, select your existing GitHub connection
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-12.png)
+
+- Under Repository name, select "nextwork-web-project"
+- Under Default branch, select master.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-14.png)
+
+- Under Output artifact format, leave it as CodePipeline default.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-15.png)
+
+- Make sure that Webhook events is checked under Detect change events.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-16.png)
+
+- Click Next.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-17.png)
+
+- In the Build provider dropdown, select AWS CodeBuild from Other build providers.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-18.png)
+
+- Under Project name, select your existing CodeBuild project
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-19.png)
+
+- In the Project name dropdown, search for and select nextwork-devops-cicd.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-20.png)
+
+- Leave the default settings for Environment variables, Build type, and Region.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-21.png)
+
+- Under Input artifacts, SourceArtifact should be selected by default.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-22.png)
+
+- Click Next.
+- On the Add test stage page, click Skip test stage.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-24.png)
+
+- In the Deploy provider dropdown, select AWS CodeDeploy.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-25.png)
+
+- Under Input artifacts, BuildArtifact should be selected by default.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-27.png)
+
+- Under Application name, select your existing CodeDeploy application
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-28.png)
+
+- Under Deployment group, select your existing CodeDeploy deployment group
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-29.png)
+
+- Check the box for Configure automatic rollback on stage failure.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-31.png)
+
+- Click Next.
+- On the Review page, take a moment to review all the settings you've configured for your pipeline.
+- Once you've reviewed all the settings and confirmed they are correct, click Create pipeline.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-38.png)
+
+- After clicking Create pipeline, you will be taken to the pipeline details page.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-39.png)
+
+- CodePipeline automatically starts executing the pipeline as soon as it's created.
+- You can see the progress of each stage in the pipeline diagram. The stages will transition from grey to blue (in progress) to green (success) as the pipeline executes.
+
+## Test Your Pipeline
+
+- Open the index.jsp file located in src/main/webapp/ and make some changes.
+- Save the index.jsp file.
+- Open your terminal and navigate to your local git repository for the web app.
+- Commit and push the changes to your GitHub repository using the following commands:
+```bash
+git add .
+git commit -m "Update index.jsp with a new line to test CodePipeline"
+git push origin master
+```
+- Go back to the CodePipeline console and watch your pipeline react to the code change.
+- You should see a new execution starting automatically after you push the changes to GitHub.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-45.png)
+
+- Wait for the Build and Deploy stages to complete successfully (turn green) in the CodePipeline console.
+
+![App Screenshot](https://learn.nextwork.org/projects/static/aws-devops-codepipeline-updated/screenshot-50.png)
+
+- You should see your web application with the new line(s) you added:
+
+![App Screenshot](https://raw.githubusercontent.com/UXHERI/Cloud-Projects/refs/heads/main/CICD-Pipeline-With-AWS/Images/Final.png)
+
+- The CI/CD pipeline is now automatically building and deploying my web application whenever I push changes to GitHub.
+
+So that was a detailed project on how to build CI/CD Pipeline on AWS using Github as the source.
