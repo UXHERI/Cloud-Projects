@@ -1,4 +1,3 @@
-[[
 # CI/CD Pipeline with AWS
 
 In this AWS project, I will build a CI/CD pipeline using AWS and Github.
