@@ -274,7 +274,7 @@ In this step, we are going to configure our **VPC's Subnet Route Table** to redi
 
 _Congrats on making a successful VPC endpoint connection!_
 
-> [!IMPORTANT]
+> [!NOTE]
 > Now you cannot delete your S3 bucket from the AWS console. You can only delete your S3 bucket from your EC2 now. Let's see that in action!
 
 - Head to your **S3** console.
