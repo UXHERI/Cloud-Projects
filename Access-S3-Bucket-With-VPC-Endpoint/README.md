@@ -274,7 +274,7 @@ In this step, we are going to configure our **VPC's Subnet Route Table** to redi
 
 _Congrats on making a successful VPC endpoint connection!_
 
-> [!TIP]
+> [!IMPORTANT]
 > Just a quick tip, that you can use `> [!TIP]` to create
 > a GitHub-style alert in your README.md like this.
 
