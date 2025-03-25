@@ -3,7 +3,7 @@
 
 In this project, I am going to show you how you can use the **Elastic Load Balancing (ELB)** and Amazon EC2 **Auto Scaling** to load balance and automatically scale your infrastructure.
 
-![App Screenshot](https://labs.vocareum.com/web/3820279/3817432.0/ASNLIB/public/docs/lang/en-us/images/FinalArchitecture.png)
+![App Screenshot](https://github.com/UXHERI/Cloud-Projects/blob/main/Auto-Scaling-and-Load-Balancing/Images/FinalArchitecture.png?raw=true)
 
 
 ## Step-by-Step Project Guide:
