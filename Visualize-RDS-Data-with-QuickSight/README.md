@@ -29,6 +29,7 @@ In this step, we are going to create a relational database in AWS which will be 
 ![App Screenshot](https://github.com/UXHERI/Cloud-Projects/blob/main/Visualize-RDS-Data-with-QuickSight/Images/1.png?raw=true)
 
 - In the **Availability and durability** section, choose **Single-AZ DB instance deployment (1 instance)**.
+
 ![App Screenshot](https://github.com/UXHERI/Cloud-Projects/blob/main/Visualize-RDS-Data-with-QuickSight/Images/2.png?raw=true)
 
 - For **DB instance identifier**, type `QuickSightDatabase`.
