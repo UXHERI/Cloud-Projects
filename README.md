@@ -1,56 +1,86 @@
-# ​​ Cloud Projects Repository
+# ☁️ Cloud Projects by UXHERI
 
-Welcome to my **Cloud Projects** hub — where cloud-native ideas meet real-world execution. This repo captures hands-on deployments, automation, and infrastructure work that demonstrate true cloud engineering at its finest.
+Welcome to my **Cloud Projects** repository — a collection of real-world AWS implementations showcasing cloud architecture, automation, scaling, visualization, and secure deployments.
 
-Whether you're a fellow cloud enthusiast, recruiter, or curious learner — pull up a chair. You'll find practical implementations of AWS services, infrastructure automation, and scalable architectures ready to explore and deploy.
-
----
-
-## ​ What’s Inside
-
-- 🌤️ Projects that explore **AWS cloud services** — from compute and storage to networking and IAM.
-- 🛠️ Infrastructure as Code with **Terraform** — provision, manage, and evolve resources programmatically.
-- 🔄 Automation patterns for deploying, scaling, and securing cloud components.
-- ⚙️ Real-world setups selected and documented for clarity and learning.
-- 🗂 Clean organization and reusable Terraform modules for portability and rapid experimentation.
-
-Every setup is designed to be modular, repeatable, and practical — making this repo both a playground and a portfolio.
+These projects go beyond theory — they're designed to reflect how things are done in production: clean, modular, scalable, and automated.
 
 ---
 
-## ​ Tech Stack & Tooling
+## 🧠 What’s Covered?
 
-| Category                 | Tools & Technologies                  |
-|--------------------------|----------------------------------------|
-| **Cloud Platform**       | AWS (EC2, S3, IAM, VPC, …)            |
-| **Infrastructure as Code** | Terraform                             |
-| **Automation & Scripts** | Bash, CLI tools                        |
-| **Documentation**        | Markdown, architecture diagrams        |
-| **Version Control**      | Git & GitHub                           |
+Each folder represents a hands-on project where I architected, automated, or integrated services across the AWS ecosystem. Below is a glimpse into the types of solutions this repo contains:
 
 ---
 
-##  Why Explore This Repo?
-
-- **Learn by example** — real-world Terraform modules and AWS setups.
-- **Reuse and remix** — fork and customize for your own cloud experiments.
-- **Show your skills** — portfolio-ready docs, clean structure, and meaningful automation.
-- **Stay organized** — modular folders make it easy to find, run, and understand everything.
+### 🔒 Access S3 Buckets with VPC Endpoint  
+✅ Implemented secure private access to S3 using **VPC Gateway Endpoints**  
+✅ Locked down public access and routed traffic through internal AWS networking
 
 ---
 
-##  Connect & Collaborate
-
-Got feedback, ideas, or just want to geek out about cloud architecture?
-
-- **Reach out on LinkedIn**: [Uzair Khan](https://www.linkedin.com/in/uzairikhan/)  
-- **Email me**: uzairikhan2k2@gmail.com  
+### 📈 Auto Scaling & Load Balancing  
+✅ Built a **highly available architecture** using **Launch Templates**, **ASGs**, and **Application Load Balancers**  
+✅ Achieved horizontal scalability based on CPU thresholds
 
 ---
 
-##  Show Some ⭐ Love
+### 🔁 CI/CD Pipeline with AWS  
+✅ Designed a CI/CD flow using **CodeCommit**, **CodeBuild**, and **CodeDeploy**  
+✅ Fully automated code delivery pipeline with rollback & status monitoring
 
-If this repo sparks ideas or accelerates your learning, a **star** ⭐ would be awesome. Your support helps the cloud community grow stronger.
+---
 
-Let’s build, deploy, and scale — cloud style.
-::contentReference[oaicite:0]{index=0}
+### 🚢 Deploy an App on Kubernetes with AWS  
+✅ Deployed containerized workloads to **Amazon EKS**  
+✅ Integrated **kubectl**, **IAM roles**, and managed worker nodes
+
+---
+
+### 🏗️ Three-Tier Web App Architecture  
+✅ Built a **classic 3-tier architecture** using **ALB, EC2, and RDS**  
+✅ Managed routing, scaling, and database connectivity with **tight security groups**
+
+---
+
+### 📊 Visualize RDS Data with QuickSight  
+✅ Pulled data from **Amazon RDS**  
+✅ Created **interactive dashboards** with **Amazon QuickSight** for business insights
+
+---
+
+## 🛠️ Tools & Tech Stack
+
+| Domain                | Tools Used                               |
+|----------------------|-------------------------------------------|
+| 🖥️ Compute             | EC2, EKS, Auto Scaling Groups             |
+| 💾 Storage            | S3, RDS                                   |
+| 🔄 Networking         | VPC, Subnets, Load Balancers, Endpoints   |
+| 🛠️ DevOps & CI/CD     | CodePipeline, CodeBuild, CodeDeploy       |
+| 📊 Visualization      | Amazon QuickSight                         |
+| 🔐 Security           | IAM, Security Groups, Private Access      |
+| 🧱 Infrastructure     | Terraform (some projects), CloudFormation |
+| 💻 Scripting          | Bash, AWS CLI                             |
+
+---
+
+## 🔍 Why This Repo Matters
+
+- ✅ Practical, **production-style deployments**
+- ✅ Modular and **well-documented**
+- ✅ Real AWS services, not mock setups
+- ✅ Useful for **cloud interviews**, **portfolio building**, and **real projects**
+
+---
+
+## 🤝 Let’s Connect
+
+I'm always open to connecting with fellow cloud engineers, recruiters, and tech enthusiasts.
+
+🔗 [LinkedIn – Uzair Khan](https://www.linkedin.com/in/iam-uzairikhan/)  
+📬 uzairikhan2k2@gmail.com
+
+---
+
+## ⭐ Support the Work
+
+If this repo helped you learn something or inspired your own projects, a **⭐ star** would mean the world. Let’s keep building 🚀
