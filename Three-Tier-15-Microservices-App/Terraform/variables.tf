@@ -43,3 +43,8 @@ variable "rds_mysql_secret" {
   description = "RDS Secrets"
   default = [Your RDS Secrets Name]
 }
+
+variable "my_email" {
+  description = "Email Address for SNS Notifications"
+  default = [Your Email Address]
+}
