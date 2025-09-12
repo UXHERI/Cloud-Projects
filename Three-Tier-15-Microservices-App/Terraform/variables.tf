@@ -38,3 +38,8 @@ variable "flow_logs_bucket" {
   description = "S3 bucket for VPC flow logs"
   default     = [Your VPC Flow Logs S3 Bucket Name]
 }
+
+variable "rds_mysql_secret" {
+  description = "RDS Secrets"
+  default = [Your RDS Secrets Name]
+}
